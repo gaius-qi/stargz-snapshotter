@@ -1,6 +1,6 @@
 # Containerd Stargz Snapshotter Plugin Overview
 
-__Before get through this overview document, we recommend you to read [README](../README.md).__
+**Before get through this overview document, we recommend you to read [README](../README.md).**
 
 Pulling image is one of the time-consuming steps in the container startup process.
 In containerd community, we have had a lot of discussions to address this issue as the following,
@@ -9,12 +9,12 @@ In containerd community, we have had a lot of discussions to address this issue 
 - [#2968 Support `Prepare` for existing snapshots in Snapshotter interface](https://github.com/containerd/containerd/issues/2968)
 - [#2943 remote filesystem snapshotter](https://github.com/containerd/containerd/issues/2943)
 
-The solution for the fast image distribution is called *Remote Snapshotter* plugin.
+The solution for the fast image distribution is called _Remote Snapshotter_ plugin.
 This prepares container's rootfs layers by directly mounting from remote stores instead of downloading and unpacking the entire image contents.
-The actual image contents can be fetched *lazily* so runtimes can startup containers before the entire image contents to be locally available.
-We call these remotely mounted layers as *remote snapshots*.
+The actual image contents can be fetched _lazily_ so runtimes can startup containers before the entire image contents to be locally available.
+We call these remotely mounted layers as _remote snapshots_.
 
-*Stargz Snapshotter* is a remote snapshotter plugin implementation which supports standard compatible remote snapshots functionality.
+_Stargz Snapshotter_ is a remote snapshotter plugin implementation which supports standard compatible remote snapshots functionality.
 This snapshotter leverages [eStargz](/docs/stargz-estargz.md) image, which is lazily-pullable and still standard-compatible.
 Because of this compatibility, eStargz image can be pushed to and lazily pulled from [OCI](https://github.com/opencontainers/distribution-spec)/[Docker](https://docs.docker.com/registry/spec/api/) registries (e.g. ghcr.io).
 Furthermore, images can run even on eStargz-agnostic runtimes (e.g. Docker).
@@ -58,7 +58,7 @@ This repo contains [a Dockerfile as a KinD node image](/Dockerfile) which includ
 Stargz snapshotter mounts eStargz layers from registries to the node using FUSE.
 The all files metadata in the image are preserved on the filesystem and files contents are fetched from registries on demand.
 
-At the root of the filesystem, there is a *state directory* (`/.stargz-snapshotter`) for status monitoring for the filesystem.
+At the root of the filesystem, there is a _state directory_ (`/.stargz-snapshotter`) for status monitoring for the filesystem.
 This directory is hidden from `getdents(2)` so you can't see this with `ls -a /`.
 Instead, you can directly access the directory by specifying the path (`/.stargz-snapshotter`).
 
@@ -186,6 +186,10 @@ insecure = true
 ```
 
 > NOTE: Headers aren't passed to the redirected location.
+
+If the kubernetes cluster is very large, [dragonfly](https://d7y.io) can be used as registry mirror to
+reduce the requests and traffic of the origin based on P2P,
+please refer to [how-to-use-dragonfly-with-estargz](https://d7y.io/docs/setup/integration/stargz/).
 
 The config file can be passed to stargz snapshotter using `containerd-stargz-grpc`'s `--config` option.
 
